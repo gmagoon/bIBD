@@ -1,0 +1,175 @@
+@article{speeDB,
+    author = {Huang, Lin AND Bercovici, Sivan AND Rodriguez, Jesse M. AND Batzoglou, Serafim},
+    journal = {PLOS ONE},
+    publisher = {Public Library of Science},
+    title = {An Effective Filter for {IBD} Detection in Large Data Sets},
+    year = {2014},
+    month = {03},
+    volume = {9},
+    url = {https://doi.org/10.1371/journal.pone.0092713},
+    pages = {1-10},
+    abstract = {Identity by descent (IBD) inference is the task of computationally detecting genomic segments that are shared between individuals by means of common familial descent. Accurate IBD detection plays an important role in various genomic studies, ranging from mapping disease genes to exploring ancient population histories. The majority of recent work in the field has focused on improving the accuracy of inference, targeting shorter genomic segments that originate from a more ancient common ancestor. The accuracy of these methods, however, is achieved at the expense of high computational cost, resulting in a prohibitively long running time when applied to large cohorts. To enable the study of large cohorts, we introduce SpeeDB, a method that facilitates fast IBD detection in large unphased genotype data sets. Given a target individual and a database of individuals that potentially share IBD segments with the target, SpeeDB applies an efficient opposite-homozygous filter, which excludes chromosomal segments from the database that are highly unlikely to be IBD with the corresponding segments from the target individual. The remaining segments can then be evaluated by any IBD detection method of choice. When examining simulated individuals sharing 4 cM IBD regions, SpeeDB filtered out 99.5% of genomic regions from consideration while retaining 99% of the true IBD segments. Applying the SpeeDB filter prior to detecting IBD in simulated fourth cousins resulted in an overall running time that was 10,000x faster than inferring IBD without the filter and retained 99% of the true IBD segments in the output.},
+    number = {3},
+    doi = {10.1371/journal.pone.0092713}
+}
+
+@article{23andMe,
+    author = {Henn, Brenna M. AND Hon, Lawrence AND Macpherson, J. Michael AND Eriksson, Nick AND Saxonov, Serge AND Pe'er, Itsik AND Mountain, Joanna L.},
+    journal = {PLOS ONE},
+    publisher = {Public Library of Science},
+    title = {Cryptic Distant Relatives Are Common in Both Isolated and Cosmopolitan Genetic Samples},
+    year = {2012},
+    month = {04},
+    volume = {7},
+    url = {https://doi.org/10.1371/journal.pone.0034267},
+    pages = {1-13},
+    abstract = {Although a few hundred single nucleotide polymorphisms (SNPs) suffice to infer close familial relationships, high density genome-wide SNP data make possible the inference of more distant relationships such as 2nd to 9th cousinships. In order to characterize the relationship between genetic similarity and degree of kinship given a timeframe of 100–300 years, we analyzed the sharing of DNA inferred to be identical by descent (IBD) in a subset of individuals from the 23andMe customer database (n = 22,757) and from the Human Genome Diversity Panel (HGDP-CEPH, n = 952). With data from 121 populations, we show that the average amount of DNA shared IBD in most ethnolinguistically-defined populations, for example Native American groups, Finns and Ashkenazi Jews, differs from continentally-defined populations by several orders of magnitude. Via extensive pedigree-based simulations, we determined bounds for predicted degrees of relationship given the amount of genomic IBD sharing in both endogamous and ‘unrelated’ population samples. Using these bounds as a guide, we detected tens of thousands of 2nd to 9th degree cousin pairs within a heterogenous set of 5,000 Europeans. The ubiquity of distant relatives, detected via IBD segments, in both ethnolinguistic populations and in large ‘unrelated’ populations samples has important implications for genetic genealogy, forensics and genotype/phenotype mapping studies.},
+    number = {4},
+    doi = {10.1371/journal.pone.0034267}
+}
+
+@article{GSK,
+title = "The {Golden State Killer} investigation and the nascent field of forensic genealogy",
+journal = "Forensic Science International: Genetics",
+volume = "36",
+pages = "186 - 188",
+year = "2018",
+issn = "1872-4973",
+doi = "https://doi.org/10.1016/j.fsigen.2018.07.010",
+url = "http://www.sciencedirect.com/science/article/pii/S1872497318303685",
+author = "Chris Phillips",
+keywords = "Genetic genealogy, DTC genetic testing, GEDmatch, Criminal investigative practice, SNPs",
+abstract = "The likely genetic analysis steps taken to identify suspect Joseph DeAngelo in the recently resolved Golden State Killer investigation are discussed. The consequences for the forensic genetics community of introducing much more detailed SNP analysis regimes, as used by the Golden State Killer investigators, are reviewed along with some of the limitations in accuracy and sensitivity that may be involved in such approaches."
+}
+
+@article{decode,
+  title={Detection of sharing by descent, long-range phasing and haplotype imputation},
+  author={Kong, Augustine and Masson, Gisli and Frigge, Michael L and Gylfason, Arnaldur and Zusmanovich, Pasha and Thorleifsson, Gudmar and Olason, Pall I and Ingason, Andres and Steinberg, Stacy and Rafnar, Thorunn and others},
+  journal={Nature genetics},
+  volume={40},
+  number={9},
+  pages={1068},
+  year={2008},
+  publisher={Nature Publishing Group}
+}
+
+@article{beagle,
+  title={High-resolution detection of identity by descent in unrelated individuals},
+  author={Browning, Sharon R and Browning, Brian L},
+  journal={The American Journal of Human Genetics},
+  volume={86},
+  number={4},
+  pages={526--539},
+  year={2010},
+  publisher={Elsevier}
+}
+
+@article{GERMLINE,
+author = {Gusev, Alexander and Lowe, Jennifer K. and Stoffel, Markus and Daly, Mark J. and Altshuler, David and Breslow, Jan L. and Friedman, Jeffrey M. and Pe'er, Itsik}, 
+title = {Whole population, genome-wide mapping of hidden relatedness},
+volume = {19}, 
+number = {2}, 
+pages = {318-326}, 
+year = {2009}, 
+doi = {10.1101/gr.081398.108}, 
+abstract ={We present GERMLINE, a robust algorithm for identifying segmental sharing indicative of recent common ancestry between pairs of individuals. Unlike methods with comparable objectives, GERMLINE scales linearly with the number of samples, enabling analysis of whole-genome data in large cohorts. Our approach is based on a dictionary of haplotypes that is used to efficiently discover short exact matches between individuals. We then expand these matches using dynamic programming to identify long, nearly identical segmental sharing that is indicative of relatedness. We use GERMLINE to comprehensively survey hidden relatedness both in the HapMap as well as in a densely typed island population of 3000 individuals. We verify that GERMLINE is in concordance with other methods when they can process the data, and also facilitates analysis of larger scale studies. We bolster these results by demonstrating novel applications of precise analysis of hidden relatedness for (1) identification and resolution of phasing errors and (2) exposing polymorphic deletions that are otherwise challenging to detect. This finding is supported by concordance of detected deletions with other evidence from independent databases and statistical analyses of fluorescence intensity not used by GERMLINE.}, 
+URL = {http://genome.cshlp.org/content/19/2/318.abstract}, 
+eprint = {http://genome.cshlp.org/content/19/2/318.full.pdf+html}, 
+journal = {Genome Research} 
+}
+
+@article{Albrechtsen,
+author = {Albrechtsen, Anders and Sand Korneliussen, Thorfinn and Moltke, Ida and van Overseem Hansen, Thomas and Nielsen, Finn Cilius and Nielsen, Rasmus},
+title = {Relatedness mapping and tracts of relatedness for genome-wide data in the presence of linkage disequilibrium},
+journal = {Genetic Epidemiology},
+volume = {33},
+number = {3},
+pages = {266-274},
+year = {2009}, 
+keywords = {identity by descent, relatedness, hidden Markov model, linkage, association, complex disease, genome-wide analysis, SNP},
+doi = {10.1002/gepi.20378},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/gepi.20378},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/gepi.20378},
+abstract = {Abstract Estimates of relatedness have several applications such as the identification of relatives or in identifying disease related genes through identity by descent (IBD) mapping. Here we present a new method for identifying IBD tracts among individuals from genome-wide single nucleotide polymorphisms data. We use a continuous time Markov model where the hidden states are the number of alleles shared IBD between pairs of individuals at a given position. In contrast to previous methods, our method accurately accounts for linkage disequilibrium using pairwise haplotype probabilities. The method provides a map of the local relatedness along the genome. We illustrate the potential of the method for mapping disease genes on a real data set, and show that the method has the potential to map causative disease mutations using only a handful of affected individuals. The new IBD mapping method provides considerable improvement in mapping power in natural populations compared to standard association mapping methods. Genet. Epidemiol. 2009. © 2008 Wiley-Liss, Inc.}
+}
+
+@article{PLINK,
+  title={PLINK: a tool set for whole-genome association and population-based linkage analyses},
+  author={Purcell, Shaun and Neale, Benjamin and Todd-Brown, Kathe and Thomas, Lori and Ferreira, Manuel AR and Bender, David and Maller, Julian and Sklar, Pamela and De Bakker, Paul IW and Daly, Mark J and others},
+  journal={The American Journal of Human Genetics},
+  volume={81},
+  number={3},
+  pages={559--575},
+  year={2007},
+  publisher={Elsevier}
+}
+
+@article{Parente2,
+author = {Rodriguez, Jesse M. and Bercovici, Sivan and Huang, Lin and Frostig, Roy and Batzoglou, Serafim}, 
+title = {Parente2: a fast and accurate method for detecting identity by descent},
+volume = {25}, 
+number = {2}, 
+pages = {280-289}, 
+year = {2015}, 
+doi = {10.1101/gr.173641.114}, 
+abstract ={Identity-by-descent (IBD) inference is the problem of establishing a genetic connection between two individuals through a genomic segment that is inherited by both individuals from a recent common ancestor. IBD inference is an important preceding step in a variety of population genomic studies, ranging from demographic studies to linking genomic variation with phenotype and disease. The problem of accurate IBD detection has become increasingly challenging with the availability of large collections of human genotypes and genomes: Given a cohort’s size, a quadratic number of pairwise genome comparisons must be performed. Therefore, computation time and the false discovery rate can also scale quadratically. To enable accurate and efficient large-scale IBD detection, we present Parente2, a novel method for detecting IBD segments. Parente2 is based on an embedded log-likelihood ratio and uses a model that accounts for linkage disequilibrium by explicitly modeling haplotype frequencies. Parente2 operates directly on genotype data without the need to phase data prior to IBD inference. We evaluate Parente2’s performance through extensive simulations using real data, and we show that it provides substantially higher accuracy compared to previous state-of-the-art methods while maintaining high computational efficiency.}, 
+URL = {http://genome.cshlp.org/content/25/2/280.abstract}, 
+eprint = {http://genome.cshlp.org/content/25/2/280.full.pdf+html}, 
+journal = {Genome Research} 
+}
+
+@article{ERSA,
+author = {Huff, Chad D. and Witherspoon, David J. and Simonson, Tatum S. and Xing, Jinchuan and Watkins, W. Scott and Zhang, Yuhua and Tuohy, Therese M. and Neklason, Deborah W. and Burt, Randall W. and Guthery, Stephen L. and Woodward, Scott R. and Jorde, Lynn B.}, 
+title = {Maximum-likelihood estimation of recent shared ancestry ({ERSA})},
+volume = {21}, 
+number = {5}, 
+pages = {768-774}, 
+year = {2011}, 
+doi = {10.1101/gr.115972.110}, 
+abstract ={Accurate estimation of recent shared ancestry is important for genetics, evolution, medicine, conservation biology, and forensics. Established methods estimate kinship accurately for first-degree through third-degree relatives. We demonstrate that chromosomal segments shared by two individuals due to identity by descent (IBD) provide much additional information about shared ancestry. We developed a maximum-likelihood method for the estimation of recent shared ancestry (ERSA) from the number and lengths of IBD segments derived from high-density SNP or whole-genome sequence data. We used ERSA to estimate relationships from SNP genotypes in 169 individuals from three large, well-defined human pedigrees. ERSA is accurate to within one degree of relationship for 97% of first-degree through fifth-degree relatives and 80% of sixth-degree and seventh-degree relatives. We demonstrate that ERSA's statistical power approaches the maximum theoretical limit imposed by the fact that distant relatives frequently share no DNA through a common ancestor. ERSA greatly expands the range of relationships that can be estimated from genetic data and is implemented in a freely available software package.}, 
+URL = {http://genome.cshlp.org/content/21/5/768.abstract}, 
+eprint = {http://genome.cshlp.org/content/21/5/768.full.pdf+html}, 
+journal = {Genome Research} 
+}
+
+@article{ERSA2,
+    author = {Li, Hong AND Glusman, Gustavo AND Hu, Hao AND Shankaracharya AND Caballero, Juan AND Hubley, Robert AND Witherspoon, David AND Guthery, Stephen L. AND Mauldin, Denise E. AND Jorde, Lynn B. AND Hood, Leroy AND Roach, Jared C. AND Huff, Chad D.},
+    journal = {PLOS Genetics},
+    publisher = {Public Library of Science},
+    title = {Relationship Estimation from Whole-Genome Sequence Data},
+    year = {2014},
+    month = {01},
+    volume = {10},
+    url = {https://doi.org/10.1371/journal.pgen.1004144},
+    pages = {1-12},
+    abstract = {Author Summary The determination of the relationship between a pair of individuals is a fundamental application of genetics. The most accurate methods for relationship estimation rely on precise, localized estimates of genetic sharing between individuals. Earlier methods have generated these estimates from high-density genetic marker data. We performed relationship estimation using whole-genome sequence data for 1490 known pairwise relationships among 258 individuals in 30 families along with 46 population samples as controls. Our results demonstrate that complexities specific to whole-genome sequencing result in regions of the genome that are prone to false-positive estimates of genetic sharing. We provide a map of these spurious IBD regions and introduce new methods, implemented in the software package ERSA 2.0, to control for spurious IBD. We show that ERSA 2.0 provides a 5% to 15% increase in relationship detection power for distant relationships with whole-genome sequence data relative to high-density genetic marker data.},
+    number = {1},
+    doi = {10.1371/journal.pgen.1004144}
+}
+
+@article{fastIBD,
+  title={A fast, powerful method for detecting identity by descent},
+  author={Browning, Brian L and Browning, Sharon R},
+  journal={The American Journal of Human Genetics},
+  volume={88},
+  number={2},
+  pages={173--182},
+  year={2011},
+  publisher={Elsevier}
+}
+
+@misc{GEDmatch,
+  title="{GEDmatch}",
+  note="Available at https://www.gedmatch.com"
+}
+
+@article{RELPAIR,
+  title={Improved inference of relationship for pairs of individuals},
+  author={Epstein, Michael P and Duren, William L and Boehnke, Michael},
+  journal={The American Journal of Human Genetics},
+  volume={67},
+  number={5},
+  pages={1219--1231},
+  year={2000},
+  publisher={Elsevier}
+}
