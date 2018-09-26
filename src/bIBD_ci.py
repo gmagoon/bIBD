@@ -87,5 +87,5 @@ if __name__ == '__main__':
                 d = str(cllrData[i][0])
                 break
             i=i+1
-        ibdout.write('\t'.join([str(posL),str(posR),str(rightcllr[1]-leftcllr[1]),a,b,c,d])+'\n')
+        ibdout.write('\t'.join([str(posL),str(posR),str(rightcllr[1]-leftcllr[1]),str(cllrDataIndex[posR]-(cllrDataIndex[posL]-1)),a,b,c,d])+'\n')
     ibdout.close()
