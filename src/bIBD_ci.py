@@ -10,7 +10,7 @@ if __name__ == '__main__':
     cl = float(sys.argv[3]) #approximate confidence level, e.g. 0.95
     ibdoutpath = sys.argv[4]
 
-    cithresh=-math.log(1.0-cl)/2 #the "confidence interval" considered here is not statistically robust, but it should be a useful proxy for one; 0.95 cl will give approximately 1.5 here
+    cithresh=-math.log(1.0-cl) #the "confidence interval" considered here is not statistically robust, but it should be a useful proxy for one; 0.95 cl will give approximately 3.0 here
     print 'cithresh = ' + str(cithresh)
 
     #read in segment info
@@ -87,5 +87,25 @@ if __name__ == '__main__':
                 d = str(cllrData[i][0])
                 break
             i=i+1
-        ibdout.write('\t'.join([str(posL),str(posR),str(rightcllr[1]-leftcllr[1]),str(cllrDataIndex[posR]-(cllrDataIndex[posL]-1)),a,b,c,d])+'\n')
+        #determine max drawdown (here calculated as a negative or zero value), a measure of segment reliability; significantly negative values could indicate false positive, de novo mutation, genotyping error, structural variation, or undetected break
+        maxcllr=cllrData[cllrDataIndex[posL]][1]
+        maxddn=0.0
+        maxddnstartpos=0
+        potentialmaxddnstartpos=0
+        maxddnendpos=0
+        storePotentialStartPos=True #store potential start position as the position after a new maximum
+        for i in range(cllrDataIndex[posL]+1,cllrDataIndex[posR]): #note we skip (cllrDataIndex[posL]-1) and cllrDataIndex[posR] as these are known min and max, respectively; also (cllrDataIndex[posL]) is known to be higher so this is used for initialization above and is also skipped
+            if storePotentialStartPos:
+                potentialmaxddnstartpos=cllrData[i][0]
+                storePotentialStartPos=False
+            cllr=cllrData[i][1]
+            if cllr > maxcllr:
+                maxcllr=cllr
+                storePotentialStartPos=True
+            ddn=cllr-maxcllr
+            if ddn < maxddn:
+                maxddn=ddn
+                maxddnstartpos=potentialmaxddnstartpos
+                maxddnendpos=cllrData[i][0]
+        ibdout.write('\t'.join([str(posL),str(posR),str(rightcllr[1]-leftcllr[1]),str(cllrDataIndex[posR]-(cllrDataIndex[posL]-1)),str(maxddnstartpos),str(maxddnendpos),str(maxddn),a,b,c,d])+'\n')
     ibdout.close()
