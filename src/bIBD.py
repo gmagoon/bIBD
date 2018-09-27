@@ -7,8 +7,8 @@ if __name__ == '__main__':
     sam1path = sys.argv[1]
     sam2path = sys.argv[2]
     afpath = sys.argv[3]
-    e1 = float(sys.argv[4]) #probability of het-to-hom or hom-to-het genotyping error
-    e2 = float(sys.argv[5]) #probability of hom-to-xhom genotyping error
+    e1 = float(sys.argv[4]) #probability of het-to-hom or hom-to-het genotyping error, e.g. 0.005
+    e2 = float(sys.argv[5]) #probability of hom-to-xhom genotyping error, e.g. 0.0005
     ibdthresh = float(sys.argv[6]) #e.g. 15.0
     xibdthresh = float(sys.argv[7]) #e.g. 15.0 or 5.0
     outpath = sys.argv[8]
@@ -170,8 +170,7 @@ if __name__ == '__main__':
 
 def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
 
-   # if not math.isnan(llr) and not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True)
-    if not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True); since NaN should only show up on the last iteration, it should be sufficient to just check for chrEnd rather than also checking for NaN which are assumed to be screened out before call
+    if not chrEnd: cllr=cllr+llr #we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True); also note that llr could be NaN on last iteration; since NaN should only show up on the last iteration, it should be sufficient to just check for chrEnd rather than also checking for NaN which are assumed to be screened out before call
 
     if storeNextPointAsPotentialStart:
         potentialStart=posSTR
