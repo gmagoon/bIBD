@@ -154,6 +154,7 @@ if __name__ == '__main__':
             #      e2 -: 2*aa_bb, 2*aa_aa, 2*bb_bb, 1*aa_ab, 1*bb_ab
             llr=math.log(hibd/xibd)
 
+            #the below nan check is probably superfluous in most use cases but could still arise when e.g. e1=e2=0
             if not math.isnan(llr): (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)=bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,False)
 
 
@@ -169,7 +170,8 @@ if __name__ == '__main__':
 
 def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
 
-    if not math.isnan(llr) and not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True)
+   # if not math.isnan(llr) and not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True)
+    if not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True); since NaN should only show up on the last iteration, it should be sufficient to just check for chrEnd rather than also checking for NaN which are assumed to be screened out before call
 
     if storeNextPointAsPotentialStart:
         potentialStart=posSTR
