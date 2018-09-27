@@ -16,6 +16,7 @@ if __name__ == '__main__':
 
     noIndels=True #whether to exclude indels when determinining cmpflag; True setting makes cmpstr='.' for indels; ...this will enable a more apples-to-apples comparison of simple vs allele-frequency-aware (but indel-dumb or at least indel-unimplemented) approach
     assert xibdthresh <= ibdthresh
+    assert e1>0.0 or e2>0.0 #with modeling of zero error, opposite homozygotes give singularity in llr; the algorithm should handle without crashing but the results could be severely impaired since the opposite homozygote sites would be effectively ignored 
 
     afdata = bIBD.readAFdata(afpath)
 
@@ -170,7 +171,7 @@ if __name__ == '__main__':
 
 def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
 
-    if not chrEnd: cllr=cllr+llr #we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True); also note that llr could be NaN on last iteration; since NaN should only show up on the last iteration, it should be sufficient to just check for chrEnd rather than also checking for NaN which are assumed to be screened out before call
+    if not chrEnd: cllr=cllr+llr #we don't add if chrEnd=True to avoid double-counting (this function usually gets called twice on last point, first with chrEnd=False, then with chrEnd=True; the situation where it only gets called once would involve llr=NaN on last site); since NaN should only show up on the last iteration, it should be sufficient to just check for chrEnd rather than also checking for NaN which are assumed to be screened out before call
 
     if storeNextPointAsPotentialStart:
         potentialStart=posSTR
