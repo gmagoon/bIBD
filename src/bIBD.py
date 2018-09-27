@@ -1,9 +1,7 @@
 import sys
-#import gzip
 import os.path
 import math
 import bIBD
-#from collections import OrderedDict
 
 if __name__ == '__main__':
     sam1path = sys.argv[1]
@@ -58,7 +56,6 @@ if __name__ == '__main__':
         assert posSTR1==posSTR2
         #we output results in the tab-delimited format: rsID, chr, pos, gt1, gt2, cmpflag, ref, alt, alt_af, llr_halfIBD
         cmpflag='.' #A: hom-to-xhom, B: hom-to-hom, C: het-to-het, D: hom-to-het, .: at least one site is no-call
-        #afSTR='.'
         aaf=float('NaN')
         llr=float('NaN')
         obsals=[]
@@ -98,7 +95,6 @@ if __name__ == '__main__':
             assert len(aaflist)==1
             alt=altList[0]
             assert len(alt)==1
-#            for a in obsals: assert a in [ref,alt]
             mismatch=False
             for a in obsals:
                 if not a in [ref,alt]: mismatch=True
@@ -130,8 +126,6 @@ if __name__ == '__main__':
             if cmpflag=='A': #hom-to-xhom, AA vs BB
                 hibd=e1*(A_a_b+B_a_b) + 2*e2*(A_a_a+B_b_b) #+hom_hom_e_coef*aa_bb_hibd=0
                 xibd=hom_hom_e_coef*aa_bb + e1*(aa_ab+bb_ab) + 2*e2*(aa_aa+bb_bb)
-                #llr = math.log((e1*(A_a_b+B_a_b)+e2*(A_a_a+B_b_b))/(hom_hom_e_coef*aa_bb+e1*(aa_ab+bb_ab)+e2*(aa_aa+bb_bb)))
-                #llr = math.log((2*e1*(x2*y+x*y2)+e2*(x2*x+y2*y))/(4*e1*(x2*x*y+x*y2*y)+e2*(x2*x2+y2*y2)))
             elif cmpflag=='B': #hom-to-hom
                 if ref in gtSTR1: #AA vs AA
                     hibd=hom_hom_e_coef*A_a_a + e1*A_a_b #+e2*aa_bb_hibd=0
@@ -175,13 +169,8 @@ if __name__ == '__main__':
     ibdout.close()
 
 def ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
-#    from collection import OrderedDict
 
-    resetOnEarlyReversion=True
-
-    if not math.isnan(llr): cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach)
-    #llrcache.append((posSTR,cllr))
-    #print str(llr)
+    if not math.isnan(llr) and not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True)
 
     if storeNextPointAsPotentialStart:
         potentialStart=posSTR
@@ -204,7 +193,6 @@ def ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered
             cllr_min_pos=posSTR
             threshTriggered=False
             storeNextPointAsPotentialStart=True
-            #bIBD.processLLRcache(llrcache,ibdout,chrEnd) #process cache #assuming xibdthresh<ibdthresh (checked by assertion), this should not be needed
     else: # not threshTriggered
         if cllr<cllr_min:
             cllr_min=cllr
@@ -217,26 +205,21 @@ def ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered
                 cllr_max_pos=posSTR
             if dup > ibdthresh:
                 threshTriggered=True
-                #print 'Thresh triggered'
                 #cllr_max=cllr #this done above
                 #cllr_max_pos=posSTR
-                if chrEnd: #threshold triggered on the last marker
-                    bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max-cllr_min) #print the segment
-        if resetOnEarlyReversion: #check for early reversion
-            ddn=cllr_max - cllr
-            if ddn > xibdthresh: #reset if early reversion
-                cllr_max=cllr
-                cllr_min=cllr
-                cllr_max_pos=posSTR
-                cllr_min_pos=posSTR
-                storeNextPointAsPotentialStart=True
+               # if chrEnd: #threshold triggered on the last marker this not needed as this function gets called on the last point twice, first with chrEnd=False, then with chrEnd=True
+               #     bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max-cllr_min) #print the segment
+        ddn=cllr_max - cllr
+        if ddn > xibdthresh: #reset if early reversion
+            cllr_max=cllr
+            cllr_min=cllr
+            cllr_max_pos=posSTR
+            cllr_min_pos=posSTR
+            storeNextPointAsPotentialStart=True
 
     return (cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)
 
-#def processLLRcache:
-
 def printIBDseg(out,start,end,segcllr):
-    #print "recording segment"
     out.write('\t'.join([start,end,str(segcllr)])+'\n')
 
 def readAFdata(path):
