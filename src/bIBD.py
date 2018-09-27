@@ -15,6 +15,7 @@ if __name__ == '__main__':
     ibdoutpath = sys.argv[9]
 
     noIndels=True #whether to exclude indels when determinining cmpflag; True setting makes cmpstr='.' for indels; ...this will enable a more apples-to-apples comparison of simple vs allele-frequency-aware (but indel-dumb or at least indel-unimplemented) approach
+    noAF0obsalleles=False #we can check and fail when observed alleles have zero allele frequency; if allele frequencies are taken from up-to-date database pool frequencies, then this shouldn't be an issue; otherwise, this could happen naturally in cases of genotyping error
     assert xibdthresh <= ibdthresh
     assert e1>0.0 or e2>0.0 #with modeling of zero error, opposite homozygotes give singularity in llr; the algorithm should handle without crashing but the results could be severely impaired since the opposite homozygote sites would be effectively ignored 
 
@@ -124,19 +125,27 @@ if __name__ == '__main__':
             hom_het_e_coef=1.0-3*e1-e2
             het_het_e_coef=1.0-4*e1
             if cmpflag=='A': #hom-to-xhom, AA vs BB
+                if noAF0obsalleles: assert not x==0.0 #note: this situation doesn't necessarily give singularity
+                if noAF0obsalleles: assert not y==0.0 #note: this situation doesn't necessarily give singularity
                 hibd=e1*(A_a_b+B_a_b) + 2*e2*(A_a_a+B_b_b) #+hom_hom_e_coef*aa_bb_hibd=0
                 xibd=hom_hom_e_coef*aa_bb + e1*(aa_ab+bb_ab) + 2*e2*(aa_aa+bb_bb)
             elif cmpflag=='B': #hom-to-hom
                 if ref in gtSTR1: #AA vs AA
+                    if noAF0obsalleles: assert not y==0.0
                     hibd=hom_hom_e_coef*A_a_a + e1*A_a_b #+e2*aa_bb_hibd=0
                     xibd=hom_hom_e_coef*aa_aa + e1*aa_ab + e2*aa_bb
                 else: #alt in gtSTR1 #BB vs BB
+                    if noAF0obsalleles: assert not x==0.0
                     hibd=hom_hom_e_coef*B_b_b + e1*B_a_b #+e2*aa_bb_hibd=0
                     xibd=hom_hom_e_coef*bb_bb + e1*bb_ab + e2*aa_bb
             elif cmpflag=='C': #het-to-het, AB vs AB
+                if noAF0obsalleles: assert not x==0.0
+                if noAF0obsalleles: assert not y==0.0
                 hibd=het_het_e_coef*ab_ab_hibd + e1*(A_a_b+B_a_b)
                 xibd=het_het_e_coef*ab_ab + e1*(aa_ab+bb_ab)
             elif cmpflag=='D': #hom-to-het
+                if noAF0obsalleles: assert not x==0.0 #note: this situation doesn't necessarily give singularity
+                if noAF0obsalleles: assert not y==0.0 #note: this situation doesn't necessarily give singularity
                 if (ref in gtSTR1) and (ref in gtSTR2): #AA vs AB
                     hibd=hom_het_e_coef*A_a_b + 2*e1*(ab_ab_hibd+A_a_a) + e2*B_a_b #+e1*aa_bb_hibd=0
                     xibd=hom_het_e_coef*aa_ab + e1*(2*ab_ab+2*aa_aa+aa_bb) + e2*bb_ab
