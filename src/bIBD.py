@@ -28,7 +28,6 @@ if __name__ == '__main__':
 
     #only single chromosome data is handled for now, but the extension is straightforward
     cllr=0.0
-    cllr_min=cllr
     cllr_max=cllr
     cllr_min_pos='0'
     cllr_max_pos='0'
@@ -155,20 +154,20 @@ if __name__ == '__main__':
             #      e2 -: 2*aa_bb, 2*aa_aa, 2*bb_bb, 1*aa_ab, 1*bb_ab
             llr=math.log(hibd/xibd)
 
-            if not math.isnan(llr): (cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)=bIBD.ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,False)
+            if not math.isnan(llr): (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)=bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,False)
 
 
         outfile.write('\t'.join([rsIDSTR1,chrSTR1,posSTR1,gtSTR1,gtSTR2,cmpflag,ref,alt,str(aaf),str(llr)])+'\n')
         line1=sam1.readline()
         line2=sam2.readline()
 
-    bIBD.ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,True)
+    bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,True)
     sam1.close()
     sam2.close()
     outfile.close()
     ibdout.close()
 
-def ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
+def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
 
     if not math.isnan(llr) and not chrEnd: cllr=cllr+llr #we check for NaN here which could show up when chrEnd=True; generally we screen out NaN first to avoid considering them for determining endpoints, but for the last point we make an exception (as it is easier to implement, and arguably the right approach); we don't add if chrEnd=True to avoid double-counting (this function gets called twice on last point, first with chrEnd=False, then with chrEnd=True)
 
@@ -186,24 +185,23 @@ def ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered
            if ddn > xibdthresh:
                printAndReset=True
         if printAndReset or chrEnd:
-            bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max-cllr_min) #print the segment
+            bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max) #print the segment
+            cllr=0.0 #reset to zero for better scaling when lower precision arithmetic is used, and also allows elimination of previously-used cllr_min variable and one floating point operation
             cllr_max=cllr #reset
-            cllr_min=cllr
             cllr_max_pos=posSTR
             cllr_min_pos=posSTR
             threshTriggered=False
             storeNextPointAsPotentialStart=True
     else: # not threshTriggered
-        if cllr<cllr_min:
-            cllr_min=cllr
+        if cllr<0.0:
+            cllr=0.0
             cllr_min_pos=posSTR
             storeNextPointAsPotentialStart=True
         else:
-            dup=cllr-cllr_min
             if cllr >= cllr_max: #this block needed to check for early reversion and also should be done if dup>ibdthresh below gets triggered
                 cllr_max=cllr
                 cllr_max_pos=posSTR
-            if dup > ibdthresh:
+            if cllr > ibdthresh:
                 threshTriggered=True
                 #cllr_max=cllr #this done above
                 #cllr_max_pos=posSTR
@@ -211,13 +209,13 @@ def ibdanalysis(cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered
                #     bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max-cllr_min) #print the segment
         ddn=cllr_max - cllr
         if ddn > xibdthresh: #reset if early reversion
+            cllr=0.0
             cllr_max=cllr
-            cllr_min=cllr
             cllr_max_pos=posSTR
             cllr_min_pos=posSTR
             storeNextPointAsPotentialStart=True
 
-    return (cllr,cllr_min,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)
+    return (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)
 
 def printIBDseg(out,start,end,segcllr):
     out.write('\t'.join([start,end,str(segcllr)])+'\n')
