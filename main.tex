@@ -111,6 +111,10 @@ Now, given these per-site log likelihood ratios (LLRs), the IBD detection algori
 
 Thus, the simplicity, flexibility, and relatively low computational expense of the algorithm might be expected to facilitate its adoption among genetic genealogy databases. Although there are no special hardware requirements, the relative simplicity, low overhead, and low precision requirements of the algorithm offer the opportunity for relatively straightforward performance tuning, potentially leading to highly-efficient implementations customized to various computing architectures, including GPUs. The negligible memory use associated with each pairwise comparison with this approach allows ample room for in-memory storage of allele frequencies or pre-computed log likelihood ratios in highly-parallelized implementations, for example.
 
+Our implementation does not consider genetic distance during IBD segment identification, but filtering by cM is straightforward to apply either in post-processing of the identified segments, or in the algorithm directly (with the additional overhead associated with an in-memory recombination map).
+
+This approach also provides some favorable features related to IBD segment endpoint estimation, relative to the current approaches based on the algorithm of Henn and colleagues. The approach of Henn et al. suffers from some uncertainty in reported endpoints due to chance matching near the boundaries of a segment. Although this approach can have similar issues, we expect that they should be mitigated through consideration of the negative log likelihood ratios associated with many hom-to-het situations. Furthermore, the probability-based framework provides a straightforward means to determine confidence intervals on the endpoints. Specifically, these can be determined from the positions where the draw-up or draw-down in the cumulative LLR, relative to the local minimum and maximum pair respectively, exceeds some threshold.
+
 [***]
 
 \section{Results}
