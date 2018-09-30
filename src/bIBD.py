@@ -191,40 +191,32 @@ def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNex
         if cllr >= cllr_max:
             cllr_max=cllr
             cllr_max_pos=posSTR
-        else:
+        elif llr < 0.0:
            ddn=cllr_max - cllr
            if ddn > xibdthresh:
                printAndReset=True
         if printAndReset or chrEnd:
             bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max) #print the segment
-            cllr=0.0 #reset to zero for better scaling when lower precision arithmetic is used, and also allows elimination of previously-used cllr_min variable and one floating point operation
-            cllr_max=cllr #reset
+            cllr=0.0 #reset
+            cllr_max=0.0
             cllr_max_pos=posSTR
             cllr_min_pos=posSTR
             threshTriggered=False
             storeNextPointAsPotentialStart=True
     else: # not threshTriggered
-        if cllr<0.0:
-            cllr=0.0
-            cllr_min_pos=posSTR
-            storeNextPointAsPotentialStart=True
-        else:
+        if llr <0.0:
+            if cllr<0.0 or cllr_max - cllr > xibdthresh: #reset if early reversion or new minimum; the (cllr_max-cllr>xibdthresh) check could formulated as an elseif for efficiency, if the compiler would have it evaluated even if cllr<0.0 is True
+                cllr=0.0 #reset to zero for better scaling when lower precision arithmetic is used, and also allows elimination of previously-used cllr_min variable and one floating point operation
+                cllr_max=0.0 #resetting cllr_max variables is not strictly necessary for cllr<0.0 situation, but it is done for consistency and simplicity
+                cllr_max_pos=posSTR
+                cllr_min_pos=posSTR
+                storeNextPointAsPotentialStart=True
+        else: # llr>= 0.0
             if cllr >= cllr_max: #this block needed to check for early reversion and also should be done if dup>ibdthresh below gets triggered
                 cllr_max=cllr
                 cllr_max_pos=posSTR
-            if cllr > ibdthresh:
-                threshTriggered=True
-                #cllr_max=cllr #this done above
-                #cllr_max_pos=posSTR
-               # if chrEnd: #threshold triggered on the last marker this not needed as this function gets called on the last point twice, first with chrEnd=False, then with chrEnd=True
-               #     bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max-cllr_min) #print the segment
-        ddn=cllr_max - cllr
-        if ddn > xibdthresh: #reset if early reversion
-            cllr=0.0
-            cllr_max=cllr
-            cllr_max_pos=posSTR
-            cllr_min_pos=posSTR
-            storeNextPointAsPotentialStart=True
+                if cllr > ibdthresh:
+                    threshTriggered=True
 
     return (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)
 
