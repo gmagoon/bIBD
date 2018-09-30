@@ -31,11 +31,11 @@ if __name__ == '__main__':
     #only single chromosome data is handled for now, but the extension is straightforward
     cllr=0.0
     cllr_max=cllr
-    cllr_min_pos='0'
-    cllr_max_pos='0'
+    cllr_min_pos=0
+    cllr_max_pos=0
     threshTriggered=False
     storeNextPointAsPotentialStart=True
-    potentialStart='0'
+    potentialStart=0
 
     sam1=open(sam1path,'r')
     sam2=open(sam2path,'r')
@@ -46,15 +46,15 @@ if __name__ == '__main__':
         split2=line2.strip().split('\t')
         rsIDSTR1=split1[0]
         chrSTR1=split1[1]
-        posSTR1=split1[2]
+        pos1=int(split1[2])
         gtSTR1=split1[3]
         rsIDSTR2=split2[0]
         chrSTR2=split2[1]
-        posSTR2=split2[2]
+        pos2=int(split2[2])
         gtSTR2=split2[3]
         assert rsIDSTR1==rsIDSTR2
         assert chrSTR1==chrSTR2
-        assert posSTR1==posSTR2
+        assert pos1==pos2
         #we output results in the tab-delimited format: rsID, chr, pos, gt1, gt2, cmpflag, ref, alt, alt_af, llr_halfIBD
         cmpflag='.' #A: hom-to-xhom, B: hom-to-hom, C: het-to-het, D: hom-to-het, .: at least one site is no-call
         aaf=float('NaN')
@@ -89,8 +89,8 @@ if __name__ == '__main__':
                         assert (not bIBD.gtIsHom(gtSTR1) and bIBD.gtIsHom(gtSTR2)) or (bIBD.gtIsHom(gtSTR1) and not bIBD.gtIsHom(gtSTR2))
 
         #determine aaf,ref,alt
-        if (chrSTR1,posSTR1) in afdata:
-            (rsID,ref,altList,aaflist)=afdata[(chrSTR1,posSTR1)]
+        if (chrSTR1,pos1) in afdata:
+            (rsID,ref,altList,aaflist)=afdata[(chrSTR1,pos1)]
             assert len(ref)==1
             assert len(altList)==1
             assert len(aaflist)==1
@@ -165,32 +165,32 @@ if __name__ == '__main__':
             llr=math.log(hibd/xibd)
 
             #the below nan check is probably superfluous in most use cases but could still arise when e.g. e1=e2=0
-            if not math.isnan(llr): (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)=bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,False)
+            if not math.isnan(llr): (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)=bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,pos1,llr,ibdout,False)
 
 
-        outfile.write('\t'.join([rsIDSTR1,chrSTR1,posSTR1,gtSTR1,gtSTR2,cmpflag,ref,alt,str(aaf),str(llr)])+'\n')
+        outfile.write('\t'.join([rsIDSTR1,chrSTR1,str(pos1),gtSTR1,gtSTR2,cmpflag,ref,alt,str(aaf),str(llr)])+'\n')
         line1=sam1.readline()
         line2=sam2.readline()
 
-    bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR1,llr,ibdout,True)
+    bIBD.ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,pos1,llr,ibdout,True)
     sam1.close()
     sam2.close()
     outfile.close()
     ibdout.close()
 
-def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,posSTR,llr,ibdout,chrEnd):
+def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart,ibdthresh,xibdthresh,pos,llr,ibdout,chrEnd):
 
     if not chrEnd: cllr=cllr+llr #we don't add if chrEnd=True to avoid double-counting (this function usually gets called twice on last point, first with chrEnd=False, then with chrEnd=True; the situation where it only gets called once would involve llr=NaN on last site); since NaN should only show up on the last iteration, it should be sufficient to just check for chrEnd rather than also checking for NaN which are assumed to be screened out before call
 
     if storeNextPointAsPotentialStart:
-        potentialStart=posSTR
+        potentialStart=pos
     storeNextPointAsPotentialStart=False #this should be reset to True wheneverthe cllr_min_pos is updated (we want the potentialStart to be the following marker)
 
     if threshTriggered:
         printAndReset=False
         if cllr >= cllr_max:
             cllr_max=cllr
-            cllr_max_pos=posSTR
+            cllr_max_pos=pos
         elif llr < 0.0:
            ddn=cllr_max - cllr
            if ddn > xibdthresh:
@@ -199,8 +199,8 @@ def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNex
             bIBD.printIBDseg(ibdout, potentialStart, cllr_max_pos, cllr_max) #print the segment
             cllr=0.0 #reset
             cllr_max=0.0
-            cllr_max_pos=posSTR
-            cllr_min_pos=posSTR
+            cllr_max_pos=pos
+            cllr_min_pos=pos
             threshTriggered=False
             storeNextPointAsPotentialStart=True
     else: # not threshTriggered
@@ -208,20 +208,20 @@ def ibdanalysis(cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNex
             if cllr<0.0 or cllr_max - cllr > xibdthresh: #reset if early reversion or new minimum; the (cllr_max-cllr>xibdthresh) check could formulated as an elseif for efficiency, if the compiler would have it evaluated even if cllr<0.0 is True
                 cllr=0.0 #reset to zero for better scaling when lower precision arithmetic is used, and also allows elimination of previously-used cllr_min variable and one floating point operation
                 cllr_max=0.0 #resetting cllr_max variables is not strictly necessary for cllr<0.0 situation, but it is done for consistency and simplicity
-                cllr_max_pos=posSTR
-                cllr_min_pos=posSTR
+                cllr_max_pos=pos
+                cllr_min_pos=pos
                 storeNextPointAsPotentialStart=True
         else: # llr>= 0.0
             if cllr >= cllr_max: #this block needed to check for early reversion and also should be done if dup>ibdthresh below gets triggered
                 cllr_max=cllr
-                cllr_max_pos=posSTR
+                cllr_max_pos=pos
                 if cllr > ibdthresh:
                     threshTriggered=True
 
     return (cllr,cllr_min_pos,cllr_max,cllr_max_pos,threshTriggered,storeNextPointAsPotentialStart,potentialStart)
 
 def printIBDseg(out,start,end,segcllr):
-    out.write('\t'.join([start,end,str(segcllr)])+'\n')
+    out.write('\t'.join([str(start),str(end),str(segcllr)])+'\n')
 
 def readAFdata(path):
     import gzip
@@ -241,7 +241,7 @@ def readAFdata(path):
                 an=int(anSTR[3:])
                 ac=[int(x) for x in acSTR[3:].split(',')]
                 aaf=[float(x)/float(an) for x in ac]
-                myDict[(split[0].strip(),split[1].strip())]=(split[2].strip(),split[3].strip(),split[4].strip().split(','),aaf) #dictionary structured as (chrSTR,posSTR)=(rsID,REF,[ALT],[ALT_AF])
+                myDict[(split[0].strip(),int(split[1].strip()))]=(split[2].strip(),split[3].strip(),split[4].strip().split(','),aaf) #dictionary structured as (chrSTR,pos)=(rsID,REF,[ALT],[ALT_AF])
             else:
                 missingcount=missingcount+1
     ts.close()
