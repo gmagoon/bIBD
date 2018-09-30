@@ -117,6 +117,8 @@ Our implementation does not consider genetic distance during IBD segment identif
 
 This approach also provides some favorable features related to IBD segment endpoint estimation, relative to the current approaches based on the algorithm of Henn and colleagues. The approach of Henn et al. suffers from some uncertainty in reported endpoints due to chance matching near the boundaries of a segment. Although this approach can have similar issues, we expect that they should be mitigated through consideration of the negative log likelihood ratios associated with many hom-to-het situations. Furthermore, the probability-based framework provides a straightforward means to determine confidence intervals on the endpoints. Specifically, these can be determined from the positions where the draw-up or draw-down in the cumulative LLR, relative to the local minimum and maximum pair respectively, exceeds some threshold.
 
+Another favorable feature of this approach is that it implicitly takes into account the rare variant "biases" introduced by broader marker sets, avoiding the previously-discussed issues associated with applying the Henn et al. algorithm to broad marker sets arising from WGS, for example. With this approach, hom-to-hom sharing of alleles with frequency near unity will have negligible contribution to the cumulative LLR, for example, whereas sharing of rare alleles (frequency near zero) is appropriately recognized as a strong signal for IBD.
+
 [***]
 
 \section{Results}
