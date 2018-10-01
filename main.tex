@@ -119,7 +119,7 @@ This approach also provides some favorable features related to IBD segment endpo
 
 Another favorable feature of this approach is that it implicitly takes into account the rare variant "biases" introduced by broader marker sets, avoiding the previously-discussed issues associated with applying the Henn et al. algorithm to broad marker sets arising from WGS, for example. With this approach, hom-to-hom sharing of alleles with frequency near unity will have negligible contribution to the cumulative LLR, for example, whereas sharing of rare alleles (frequency near zero) is appropriately recognized as a strong signal for IBD.
 
-[***]
+Now, the question arises as to where suitable allele frequency data could be obtained. A number of publicly-available datasets could provide this information, but perhaps the best source is the database itself. This would avoid singularities in LLRs that could arise when considering a shared allele modeled to have a frequency of zero, and could also help to avoid biases that might be introduced through use of a reference dataset lacking representative populations.
 
 \section{Results}
 \subsection{Refined algorithm performance tests}
