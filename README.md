@@ -3,4 +3,4 @@ This repository contains:
   - increased sensitivity and/or reduced false positive rate
   - more accurate segment endpoint detection (with confidence intervals on endpoint location in the case of the second algorithm)
   - comparable algorithmic simplicity and (low) computational expense, compared to the current standard
-- a crude implementation of one of the algorithms, which is simple enough that it could be readily tailored to particular implementations, and could make use of general-purpose GPU hardware
+- a crude python implementation of one of the algorithms, which is simple enough that it could be readily tailored to particular implementations, and could make use of general-purpose GPU hardware
